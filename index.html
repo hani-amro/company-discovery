@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>نظامكم — كما تريدونه</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Readex+Pro:wght@500;600;700&display=swap">
+<style>
+  :root {
+    --paper: #FBFAF6; --surface: #FFFFFF; --surface-2: #F4F3EE;
+    --line: #E5E2DA; --line-strong: #CFCBC0;
+    --ink: #1F2A37; --muted: #5F6B7A; --faint: #97A0AD;
+    --accent: #0E7C7B; --accent-ink: #FFFFFF; --accent-soft: #E1F2F1; --accent-line: #9ED3D1;
+    --ok: #2C8C5A; --ok-soft: #E3F4EA; --warn: #B7791F; --warn-soft: #FBF1DC;
+    --shadow: 0 10px 30px rgba(31, 42, 55, .08);
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, system-ui, sans-serif; font-size: 16px; line-height: 1.8; direction: rtl; -webkit-font-smoothing: antialiased; }
+  h1, h2, h3 { font-family: "Readex Pro", "IBM Plex Sans Arabic", system-ui, sans-serif; margin: 0; line-height: 1.45; text-wrap: balance; }
+  h1 { font-size: 28px; font-weight: 700; } h2 { font-size: 21px; font-weight: 600; } h3 { font-size: 16.5px; font-weight: 600; }
+  p { margin: 0; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  input, textarea, select { font: inherit; color: var(--ink); }
+  :focus-visible { outline: 3px solid var(--accent-line); outline-offset: 2px; border-radius: 6px; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 20px 18px 120px; }
+
+  /* ---------- top ---------- */
+  .top { display: grid; gap: 10px; padding-block: 6px 16px; }
+  .top .brand { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .top .brand b { font-family: "Readex Pro", sans-serif; font-weight: 600; font-size: 15px; color: var(--accent); }
+  .top .brand .saved { font-size: 12.5px; color: var(--faint); }
+  .progress { height: 8px; background: var(--surface-2); border-radius: 999px; overflow: hidden; border: 1px solid var(--line); }
+  .progress i { display: block; height: 100%; background: var(--accent); border-radius: 999px; transition: width .35s ease; }
+  .steps { display: flex; gap: 6px; overflow-x: auto; padding-block: 2px 4px; scrollbar-width: none; }
+  .steps::-webkit-scrollbar { display: none; }
+  .steps button { flex: none; border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 5px 12px; font-size: 13px; color: var(--muted); white-space: nowrap; }
+  .steps button.on { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 600; }
+  .steps button.done { border-color: var(--accent-line); color: var(--accent); }
+  .steps button.done::before { content: "✓ "; }
+
+  /* ---------- welcome ---------- */
+  .welcome { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 28px 24px; display: grid; gap: 16px; box-shadow: var(--shadow); }
+  .welcome .eyebrow { font-size: 13px; color: var(--accent); font-weight: 600; letter-spacing: .02em; }
+  .welcome p { color: var(--muted); font-size: 16px; }
+  .welcome ul { margin: 0; padding-inline-start: 20px; color: var(--muted); display: grid; gap: 6px; }
+  .welcome ul b { color: var(--ink); font-weight: 600; }
+
+  /* ---------- section ---------- */
+  .section { display: grid; gap: 14px; }
+  .section-h { display: grid; gap: 6px; padding-block: 6px 4px; }
+  .section-h .count { font-size: 13px; color: var(--faint); }
+  .section-h p { color: var(--muted); font-size: 15px; }
+
+  .q { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 18px 18px 16px; display: grid; gap: 12px; }
+  .q.hidden { display: none; }
+  .q .qh { display: grid; gap: 4px; }
+  .q .qh h3 { font-size: 16.5px; }
+  .q .qh .req { color: var(--warn); font-weight: 500; font-size: 12.5px; }
+  .q .help { color: var(--muted); font-size: 14px; }
+  .q .example { display: flex; gap: 8px; align-items: flex-start; font-size: 13.5px; color: var(--muted); background: var(--surface-2); border-radius: 10px; padding: 8px 12px; }
+  .q .example b { color: var(--accent); font-weight: 600; flex: none; }
+
+  .opts { display: grid; gap: 8px; }
+  .opt { display: flex; gap: 12px; align-items: flex-start; border: 1.5px solid var(--line); border-radius: 12px; padding: 11px 13px; background: var(--surface); cursor: pointer; transition: border-color .12s, background .12s; }
+  .opt:hover { border-color: var(--line-strong); }
+  .opt.on { border-color: var(--accent); background: var(--accent-soft); }
+  .opt input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .opt .mark { flex: none; width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--line-strong); margin-block-start: 3px; display: grid; place-items: center; background: var(--surface); }
+  .opt.multi .mark { border-radius: 6px; }
+  .opt.on .mark { border-color: var(--accent); background: var(--accent); }
+  .opt.on .mark::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #fff; }
+  .opt.multi.on .mark::after { width: 6px; height: 11px; border-radius: 0; background: none; border: solid #fff; border-width: 0 2.5px 2.5px 0; transform: translateY(-1px) rotate(45deg); }
+  .opt .ol { display: grid; gap: 1px; }
+  .opt .ol .l { font-weight: 500; }
+  .opt .ol .h { font-size: 13px; color: var(--muted); }
+  .other { display: none; margin-block-start: 4px; }
+  .other.show { display: block; }
+
+  .yn { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .yn button { border: 1.5px solid var(--line); background: var(--surface); border-radius: 12px; padding: 14px; font-size: 16px; font-weight: 600; }
+  .yn button.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+
+  .in, textarea.in { width: 100%; border: 1.5px solid var(--line); background: var(--surface); border-radius: 12px; padding: 11px 13px; font-size: 16px; }
+  .in::placeholder { color: var(--faint); }
+  textarea.in { min-height: 100px; resize: vertical; line-height: 1.7; }
+  .in.num { direction: ltr; text-align: end; font-variant-numeric: tabular-nums; }
+
+  .tbl { display: grid; gap: 10px; }
+  .trow { border: 1px solid var(--line); border-radius: 12px; padding: 12px; display: grid; gap: 8px; background: var(--surface-2); position: relative; }
+  .trow .cols { display: grid; gap: 8px; grid-template-columns: 1fr; }
+  @media (min-width: 560px) { .trow .cols { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); } }
+  .trow label { display: grid; gap: 3px; font-size: 13px; color: var(--muted); }
+  .trow .in, .trow select.in { padding: 8px 10px; font-size: 15px; background: var(--surface); }
+  .trow .rm { position: absolute; inset-block-start: 8px; inset-inline-end: 8px; border: 0; background: transparent; color: var(--faint); font-size: 18px; line-height: 1; padding: 4px 6px; border-radius: 6px; }
+  .trow .rm:hover { color: var(--warn); background: var(--warn-soft); }
+  .trow .rn { font-size: 12px; color: var(--faint); font-weight: 600; }
+  .add { border: 1.5px dashed var(--line-strong); background: transparent; border-radius: 12px; padding: 10px; color: var(--accent); font-weight: 600; font-size: 14px; }
+
+  /* ---------- nav ---------- */
+  .bar { position: fixed; inset-inline: 0; inset-block-end: 0; background: rgba(251, 250, 246, .92); backdrop-filter: blur(8px); border-block-start: 1px solid var(--line); padding: 12px 18px calc(12px + env(safe-area-inset-bottom)); }
+  .bar .inner { max-width: 720px; margin: 0 auto; display: flex; gap: 10px; justify-content: space-between; align-items: center; }
+  .btn { border: 0; border-radius: 12px; padding: 12px 20px; font-weight: 600; font-size: 15px; background: var(--accent); color: var(--accent-ink); }
+  .btn.ghost { background: var(--surface); border: 1.5px solid var(--line-strong); color: var(--ink); }
+  .btn.big { padding: 15px 24px; font-size: 16px; width: 100%; }
+  .btn.ok { background: var(--ok); }
+  .btn:disabled { opacity: .45; cursor: default; }
+  .bar .hint { font-size: 12.5px; color: var(--faint); }
+
+  /* ---------- review ---------- */
+  .review { display: grid; gap: 14px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 18px; display: grid; gap: 10px; }
+  .card.accent { border-color: var(--accent-line); background: var(--accent-soft); }
+  .card .h { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+  .card .h h3 { font-size: 16px; }
+  .card .h .link { background: none; border: 0; color: var(--accent); font-weight: 600; font-size: 13.5px; padding: 0; }
+  .missing { font-size: 14px; color: var(--muted); display: grid; gap: 4px; }
+  .missing b { color: var(--warn); font-weight: 600; }
+  .export { display: grid; gap: 10px; }
+  .export .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .toast { position: fixed; inset-inline: 0; inset-block-end: 90px; display: grid; justify-items: center; pointer-events: none; }
+  .toast span { background: var(--ink); color: #fff; border-radius: 999px; padding: 8px 16px; font-size: 14px; opacity: 0; transform: translateY(6px); transition: .2s; }
+  .toast span.show { opacity: 1; transform: none; }
+  .tiny { font-size: 12.5px; color: var(--faint); }
+  .import { text-align: center; padding-block-start: 24px; }
+  .import button { background: none; border: 0; color: var(--faint); font-size: 12.5px; text-decoration: underline; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+  @media print { .bar, .steps, .top .progress { display: none; } .q { break-inside: avoid; } body { padding: 0; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top" id="top" hidden>
+    <div class="brand"><b>نظامكم — كما تريدونه</b><span class="saved" id="saved">يُحفظ تلقائياً على جهازك</span></div>
+    <div class="progress"><i id="prog" style="width:0%"></i></div>
+    <div class="steps" id="steps"></div>
+  </div>
+  <main id="main"></main>
+  <div class="import"><button onclick="importFile()">استيراد ملف أجوبة (للمطوّر)</button><input type="file" id="imp" accept="application/json" hidden></div>
+</div>
+<div class="bar" id="bar" hidden><div class="inner">
+  <button class="btn ghost" id="prev" onclick="nav(-1)">السابق</button>
+  <span class="hint" id="barhint"></span>
+  <button class="btn" id="next" onclick="nav(1)">التالي</button>
+</div></div>
+<div class="toast"><span id="toast"></span></div>
+
+<script src="questions.js"></script>
+<script>
+/* ============================================================
+   المحرّك — يعرض بنك الأسئلة من questions.js ويحفظ الأجوبة محلياً
+   ============================================================ */
+const KEY = 'discovery.answers.v1';
+const BANK = (window.QUESTIONS && window.QUESTIONS.sections) ? window.QUESTIONS : { sections: [] };
+let answers = {};
+let step = -1; // -1 = welcome, 0..n-1 = sections, n = review
+try { const s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s && s.answers) { answers = s.answers; step = typeof s.step === 'number' ? s.step : -1; } } catch (e) {}
+if (location.hash === '#start' && step < 0) step = 0;
+
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const allQ = () => BANK.sections.flatMap(s => s.questions.map(q => ({ ...q, section: s.id })));
+const qById = id => allQ().find(q => q.id === id);
+function save(silent) { try { localStorage.setItem(KEY, JSON.stringify({ answers, step, at: new Date().toISOString() })); } catch (e) {} if (!silent) { const el = document.getElementById('saved'); if (el) { el.textContent = 'حُفظ ✓'; setTimeout(() => el.textContent = 'يُحفظ تلقائياً على جهازك', 1500); } } }
+function toast(t) { const el = document.getElementById('toast'); el.textContent = t; el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 2200); }
+
+/* ---------- الشرط ---------- */
+function visible(q) {
+  if (!q.showIf) return true;
+  const v = answers[q.showIf.q];
+  if (v == null) return false;
+  if (Array.isArray(v)) return v.includes(q.showIf.has);
+  if (typeof v === 'object' && v.value !== undefined) return Array.isArray(v.value) ? v.value.includes(q.showIf.has) : v.value === q.showIf.has;
+  return v === q.showIf.has;
+}
+function answered(q) {
+  const v = answers[q.id];
+  if (v == null) return false;
+  if (typeof v === 'string') return v.trim() !== '';
+  if (Array.isArray(v)) return v.length > 0 && (q.type !== 'table' || v.some(r => Object.values(r).some(x => String(x ?? '').trim() !== '')));
+  if (typeof v === 'object') { if (Array.isArray(v.value)) return v.value.length > 0; return v.value != null && v.value !== ''; }
+  return true;
+}
+function sectionStats(s) { const qs = s.questions.filter(visible); const req = qs.filter(q => q.required); return { total: qs.length, done: qs.filter(answered).length, reqMissing: req.filter(q => !answered(q)) }; }
+function overall() { const qs = allQ().filter(visible); return { total: qs.length, done: qs.filter(answered).length }; }
+
+/* ---------- العرض ---------- */
+function render() {
+  const main = document.getElementById('main'); const top = document.getElementById('top'); const bar = document.getElementById('bar');
+  const n = BANK.sections.length;
+  if (!n) { main.innerHTML = '<div class="welcome"><h1>لم تُحمَّل الأسئلة</h1><p>ملف questions.js غير موجود أو فارغ.</p></div>'; return; }
+  top.hidden = step < 0; bar.hidden = step < 0;
+  if (step < 0) { main.innerHTML = welcome(); window.scrollTo(0, 0); return; }
+  const o = overall(); document.getElementById('prog').style.width = Math.round(o.done / Math.max(1, o.total) * 100) + '%';
+  document.getElementById('steps').innerHTML = BANK.sections.map((s, i) => { const st = sectionStats(s); const cls = i === step ? 'on' : (st.done === st.total && st.total ? 'done' : ''); return `<button class="${cls}" onclick="goto(${i})">${esc(s.title)}</button>`; }).join('') + `<button class="${step === n ? 'on' : ''}" onclick="goto(${n})">المراجعة والإرسال</button>`;
+  document.getElementById('prev').disabled = step === 0;
+  document.getElementById('next').textContent = step === n ? 'صدّر الأجوبة' : (step === n - 1 ? 'إلى المراجعة' : 'التالي');
+  document.getElementById('barhint').textContent = step < n ? `${step + 1} من ${n}` : `${o.done} من ${o.total} سؤالاً مُجاب`;
+  main.innerHTML = step === n ? review() : section(BANK.sections[step]);
+  window.scrollTo({ top: 0 });
+  const on = document.querySelector('.steps button.on'); if (on) on.scrollIntoView({ inline: 'center', block: 'nearest' });
+}
+function welcome() {
+  const o = overall(); const resumed = o.done > 0;
+  return `<div class="welcome">
+    <span class="eyebrow">من هاني — للمدير</span>
+    <h1>هذه الصفحة لك. صف لنا شركتك كما هي، وكما تريدها.</h1>
+    <p>سنبني نظاماً داخلياً يدير الشركة: الأقسام والناس، الزبائن، المال، والعمل اليومي. لكن لا نريد أن نفترض شيئاً — نريد أن نسمعه منك.</p>
+    <ul>
+      <li><b>ما في جواب غلط.</b> كل سؤال معه مثال. اكتب بكلماتك.</li>
+      <li><b>ما في داعي تخلّص دفعة وحدة.</b> كل شي بينحفظ على جهازك تلقائياً — ارجع بأي وقت.</li>
+      <li><b>حوالي ${o.total || '٥٠'} سؤالاً في ${BANK.sections.length} أقسام</b> — ٢٠ إلى ٣٠ دقيقة. الأسئلة يلي عليها «مهم» هي الأساس.</li>
+      <li><b>بالآخر زر «صدّر الأجوبة»</b> بيطلع ملف — ابعثه لهاني على تيليغرام وخلص.</li>
+    </ul>
+    <button class="btn big" onclick="goto(${resumed ? Math.max(0, step) : 0})">${resumed ? `أكمل من حيث توقفت (${o.done} من ${o.total})` : 'ابدأ'}</button>
+    <span class="tiny">لا يُرسل شيء من هذه الصفحة إلى أي مكان. الأجوبة على جهازك حتى تصدّرها بنفسك.</span>
+  </div>`;
+}
+function section(s) {
+  const st = sectionStats(s);
+  return `<div class="section">
+    <div class="section-h"><span class="count">القسم ${BANK.sections.indexOf(s) + 1} · ${st.done} من ${st.total}</span><h2>${esc(s.title)}</h2><p>${esc(s.intro)}</p></div>
+    ${s.questions.map(question).join('')}
+  </div>`;
+}
+function question(q) {
+  const v = answers[q.id];
+  const body = { single: renderChoice, multi: renderChoice, yesno: renderYesNo, text: renderText, number: renderText, textarea: renderText, table: renderTable }[q.type] || renderText;
+  return `<div class="q ${visible(q) ? '' : 'hidden'}" id="q-${q.id}">
+    <div class="qh"><h3>${esc(q.label)}${q.required ? ' <span class="req">· مهم</span>' : ''}</h3>${q.help ? `<span class="help">${esc(q.help)}</span>` : ''}</div>
+    ${q.example ? `<div class="example"><b>مثال:</b><span>${esc(q.example)}</span></div>` : ''}
+    ${body(q, v)}
+  </div>`;
+}
+function renderChoice(q, v) {
+  const multi = q.type === 'multi';
+  const val = v && typeof v === 'object' && !Array.isArray(v) ? v.value : v;
+  const other = v && typeof v === 'object' && !Array.isArray(v) ? (v.other || '') : '';
+  const sel = x => multi ? (Array.isArray(val) && val.includes(x)) : val === x;
+  const opts = (q.options || []).map(o => `<label class="opt ${multi ? 'multi' : ''} ${sel(o.value) ? 'on' : ''}"><input type="${multi ? 'checkbox' : 'radio'}" name="${q.id}" value="${esc(o.value)}" ${sel(o.value) ? 'checked' : ''} onchange="pick('${q.id}', this.value, this.checked, ${multi})"><span class="mark"></span><span class="ol"><span class="l">${esc(o.label)}</span>${o.hint ? `<span class="h">${esc(o.hint)}</span>` : ''}</span></label>`).join('');
+  const oth = q.allowOther ? `<label class="opt ${multi ? 'multi' : ''} ${sel('__other') ? 'on' : ''}"><input type="${multi ? 'checkbox' : 'radio'}" name="${q.id}" value="__other" ${sel('__other') ? 'checked' : ''} onchange="pick('${q.id}', this.value, this.checked, ${multi})"><span class="mark"></span><span class="ol"><span class="l">غير ذلك</span><span class="h">اكتبه بكلماتك</span></span></label><div class="other ${sel('__other') ? 'show' : ''}"><input class="in" placeholder="اكتب هنا…" value="${esc(other)}" oninput="setOther('${q.id}', this.value)"></div>` : '';
+  return `<div class="opts">${opts}${oth}</div>`;
+}
+function renderYesNo(q, v) { return `<div class="yn"><button class="${v === 'yes' ? 'on' : ''}" onclick="setVal('${q.id}','yes')">نعم</button><button class="${v === 'no' ? 'on' : ''}" onclick="setVal('${q.id}','no')">لا</button></div>`; }
+function renderText(q, v) {
+  if (q.type === 'textarea') return `<textarea class="in" placeholder="${esc(q.placeholder || 'اكتب هنا…')}" oninput="setVal('${q.id}', this.value, true)">${esc(v || '')}</textarea>`;
+  return `<input class="in ${q.type === 'number' ? 'num' : ''}" ${q.type === 'number' ? 'inputmode="decimal"' : ''} placeholder="${esc(q.placeholder || (q.type === 'number' ? '0' : 'اكتب هنا…'))}" value="${esc(v || '')}" oninput="setVal('${q.id}', this.value, true)">`;
+}
+function renderTable(q, v) {
+  const rows = Array.isArray(v) && v.length ? v : Array.from({ length: q.minRows || 1 }, () => ({}));
+  if (!Array.isArray(v) || !v.length) answers[q.id] = rows;
+  return `<div class="tbl">${rows.map((r, i) => `<div class="trow"><span class="rn">${i + 1}</span>${rows.length > (q.minRows || 1) ? `<button class="rm" title="احذف" onclick="rmRow('${q.id}',${i})">×</button>` : ''}<div class="cols">${q.columns.map(c => `<label>${esc(c.label)}${c.type === 'select' ? `<select class="in" onchange="setCell('${q.id}',${i},'${c.key}',this.value)"><option value="">—</option>${(c.options || []).map(o => `<option ${r[c.key] === o ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select>` : `<input class="in ${c.type === 'number' ? 'num' : ''}" ${c.type === 'number' ? 'inputmode="decimal"' : ''} placeholder="${esc(c.placeholder || '')}" value="${esc(r[c.key] || '')}" oninput="setCell('${q.id}',${i},'${c.key}',this.value)">`}</label>`).join('')}</div></div>`).join('')}<button class="add" onclick="addRow('${q.id}')">+ أضف سطراً</button></div>`;
+}
+
+/* ---------- الإدخال ---------- */
+function refreshQ(id) { const q = qById(id); const el = document.getElementById('q-' + id); if (q && el) el.outerHTML = question(q); }
+function refreshVisibility() { allQ().forEach(q => { const el = document.getElementById('q-' + q.id); if (el) el.classList.toggle('hidden', !visible(q)); }); }
+function afterChange(id, keepFocus) { save(); if (!keepFocus) refreshQ(id); refreshVisibility(); updateBar(); }
+function updateBar() { const o = overall(); document.getElementById('prog').style.width = Math.round(o.done / Math.max(1, o.total) * 100) + '%'; const s = BANK.sections[step]; if (s) { const st = sectionStats(s); const c = document.querySelector('.section-h .count'); if (c) c.textContent = `القسم ${step + 1} · ${st.done} من ${st.total}`; } }
+function pick(id, value, checked, multi) {
+  const cur = answers[id]; const obj = cur && typeof cur === 'object' && !Array.isArray(cur) ? cur : { value: multi ? (Array.isArray(cur) ? cur : []) : cur, other: '' };
+  if (multi) { const arr = Array.isArray(obj.value) ? [...obj.value] : []; const i = arr.indexOf(value); if (checked && i < 0) arr.push(value); if (!checked && i >= 0) arr.splice(i, 1); obj.value = arr; }
+  else obj.value = value;
+  answers[id] = obj; afterChange(id);
+  if (value === '__other' && checked !== false) { const inp = document.querySelector(`#q-${CSS.escape(id)} .other input`); if (inp) inp.focus(); }
+}
+function setOther(id, text) { const cur = answers[id]; if (cur && typeof cur === 'object' && !Array.isArray(cur)) { cur.other = text; save(true); } }
+function setVal(id, value, keepFocus) { answers[id] = value; afterChange(id, keepFocus); }
+function setCell(id, i, key, value) { const rows = answers[id] || []; rows[i] = rows[i] || {}; rows[i][key] = value; answers[id] = rows; save(true); updateBar(); }
+function addRow(id) { const rows = answers[id] || []; rows.push({}); answers[id] = rows; refreshQ(id); save(); const last = document.querySelectorAll(`#q-${CSS.escape(id)} .trow`); if (last.length) { const inp = last[last.length - 1].querySelector('input,select'); if (inp) inp.focus(); } }
+function rmRow(id, i) { const rows = answers[id] || []; rows.splice(i, 1); answers[id] = rows; refreshQ(id); save(); }
+
+/* ---------- التنقل ---------- */
+function goto(i) { step = i; save(true); render(); }
+function nav(d) { const n = BANK.sections.length; if (step === n && d > 0) return exportAll(); step = Math.max(0, Math.min(n, step + d)); save(true); render(); }
+
+/* ---------- المراجعة والتصدير ---------- */
+function labelOf(q, v) {
+  if (v == null || v === '') return null;
+  if (q.type === 'yesno') return v === 'yes' ? 'نعم' : 'لا';
+  if (q.type === 'single' || q.type === 'multi') { const val = typeof v === 'object' && !Array.isArray(v) ? v.value : v; const other = typeof v === 'object' && !Array.isArray(v) ? v.other : ''; const arr = Array.isArray(val) ? val : [val]; return arr.filter(Boolean).map(x => x === '__other' ? `غير ذلك: ${other || '(بلا تفصيل)'}` : ((q.options || []).find(o => o.value === x) || {}).label || x).join('، ') || null; }
+  if (q.type === 'table') { const rows = (v || []).filter(r => Object.values(r).some(x => String(x ?? '').trim())); return rows.length ? rows.map((r, i) => `${i + 1}) ` + q.columns.map(c => r[c.key] ? `${c.label}: ${r[c.key]}` : null).filter(Boolean).join(' · ')).join('\n') : null; }
+  return String(v).trim() || null;
+}
+function readable() {
+  const lines = ['# أجوبة المدير — استكشاف النظام', `التاريخ: ${new Date().toLocaleDateString('ar-SY-u-nu-latn')}`, ''];
+  BANK.sections.forEach(s => { lines.push(`## ${s.title}`); s.questions.filter(visible).forEach(q => { const a = labelOf(q, answers[q.id]); lines.push(`**${q.label}**`); lines.push(a ? a : '— (لم يُجب)'); lines.push(''); }); });
+  return lines.join('\n');
+}
+function payload() {
+  const detailed = {};
+  allQ().filter(visible).forEach(q => { detailed[q.id] = { question: q.label, type: q.type, answer: labelOf(q, answers[q.id]), raw: answers[q.id] ?? null }; });
+  return { meta: { exportedAt: new Date().toISOString(), tool: 'company-discovery', version: 1, stats: overall() }, answers: detailed };
+}
+function review() {
+  const o = overall();
+  const miss = BANK.sections.map(s => ({ s, m: sectionStats(s).reqMissing })).filter(x => x.m.length);
+  return `<div class="review">
+    <div class="section-h"><h2>المراجعة والإرسال</h2><p>${o.done} من ${o.total} سؤالاً مُجاب. راجع بسرعة، ثم صدّر الملف وابعثه لهاني.</p></div>
+    ${miss.length ? `<div class="card"><div class="h"><h3>أسئلة مهمة بلا جواب</h3></div><div class="missing">${miss.map(x => `<span><b>${esc(x.s.title)}:</b> ${x.m.map(q => `<button class="link" style="background:none;border:0;color:var(--accent);padding:0;font:inherit;text-decoration:underline" onclick="goto(${BANK.sections.indexOf(x.s)})">${esc(q.label)}</button>`).join(' · ')}</span>`).join('')}<span class="tiny">تقدر تصدّر الآن وتكمّل لاحقاً — الملف يذكر ما نقص.</span></div></div>` : `<div class="card accent"><div class="h"><h3>كل الأسئلة المهمة مُجابة ✓</h3></div><p class="tiny" style="color:var(--muted)">شكراً — هذا يكفي لنبدأ.</p></div>`}
+    <div class="card export">
+      <div class="h"><h3>صدّر الأجوبة</h3><span class="tiny">ملفان: واحد للقراءة وواحد للمطوّر</span></div>
+      <button class="btn big ok" onclick="exportAll()">صدّر الأجوبة (ملفان)</button>
+      <div class="row"><button class="btn ghost" onclick="copyText()">انسخ النص لتيليغرام</button><button class="btn ghost" onclick="window.print()">اطبع</button></div>
+      <span class="tiny">بعد التصدير: ابعث الملفين لهاني على تيليغرام. الأجوبة تبقى محفوظة هنا على جهازك أيضاً.</span>
+    </div>
+    ${BANK.sections.map(s => `<div class="card"><div class="h"><h3>${esc(s.title)}</h3><button class="link" onclick="goto(${BANK.sections.indexOf(s)})">عدّل</button></div>${s.questions.filter(visible).map(q => { const a = labelOf(q, answers[q.id]); return `<div><span class="tiny">${esc(q.label)}</span><div style="white-space:pre-wrap;${a ? '' : 'color:var(--faint)'}">${a ? esc(a) : '—'}</div></div>`; }).join('')}</div>`).join('')}
+    <div class="card"><div class="h"><h3>البدء من جديد</h3></div><button class="btn ghost" onclick="if(confirm('سيُمسح كل ما كتبته على هذا الجهاز. متأكد؟')){localStorage.removeItem(KEY);answers={};step=-1;render();}">امسح كل الأجوبة</button></div>
+  </div>`;
+}
+function dl(name, text, type) { const b = new Blob([text], { type }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 800); }
+function stamp() { const d = new Date(); return d.toISOString().slice(0, 10); }
+function exportAll() { dl(`اجوبة-المدير-${stamp()}.md`, readable(), 'text/markdown;charset=utf-8'); setTimeout(() => dl(`اجوبة-المدير-${stamp()}.json`, JSON.stringify(payload(), null, 2), 'application/json;charset=utf-8'), 400); toast('نُزّل ملفان — ابعثهما لهاني'); }
+async function copyText() { try { await navigator.clipboard.writeText(readable()); toast('نُسخ النص — الصقه في تيليغرام'); } catch (e) { toast('تعذّر النسخ — استخدم التصدير'); } }
+function importFile() { const inp = document.getElementById('imp'); inp.onchange = () => { const f = inp.files[0]; if (!f) return; const r = new FileReader(); r.onload = () => { try { const d = JSON.parse(r.result); const a = {}; Object.entries(d.answers || {}).forEach(([k, v]) => { if (v && v.raw != null) a[k] = v.raw; }); answers = a; step = BANK.sections.length; save(true); render(); toast('استُوردت الأجوبة'); } catch (e) { toast('الملف غير صالح'); } }; r.readAsText(f); }; inp.click(); }
+
+render();
+</script>
+</body>
+</html>
