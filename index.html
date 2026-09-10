@@ -234,12 +234,15 @@ function question(q) {
     ${body(q, v)}
   </div>`;
 }
+function selectedValues(id) { const v = answers[id]; if (v == null) return []; const val = typeof v === 'object' && !Array.isArray(v) ? v.value : v; return Array.isArray(val) ? val : (val ? [val] : []); }
 function renderChoice(q, v) {
   const multi = q.type === 'multi';
   const val = v && typeof v === 'object' && !Array.isArray(v) ? v.value : v;
   const other = v && typeof v === 'object' && !Array.isArray(v) ? (v.other || '') : '';
   const sel = x => multi ? (Array.isArray(val) && val.includes(x)) : val === x;
-  const opts = (q.options || []).map(o => `<label class="opt ${multi ? 'multi' : ''} ${sel(o.value) ? 'on' : ''}"><input type="${multi ? 'checkbox' : 'radio'}" name="${q.id}" value="${esc(o.value)}" ${sel(o.value) ? 'checked' : ''} onchange="pick('${q.id}', this.value, this.checked, ${multi})"><span class="mark"></span><span class="ol"><span class="l">${esc(o.label)}</span>${o.hint ? `<span class="h">${esc(o.hint)}</span>` : ''}</span></label>`).join('');
+  let options = q.options || [];
+  if (q.optionsFrom) { const chosen = selectedValues(q.optionsFrom); options = options.filter(o => chosen.includes(o.value) || o.value === 'unknown'); if (!chosen.length) options = q.options || []; }
+  const opts = options.map(o => `<label class="opt ${multi ? 'multi' : ''} ${sel(o.value) ? 'on' : ''}"><input type="${multi ? 'checkbox' : 'radio'}" name="${q.id}" value="${esc(o.value)}" ${sel(o.value) ? 'checked' : ''} onchange="pick('${q.id}', this.value, this.checked, ${multi})"><span class="mark"></span><span class="ol"><span class="l">${esc(o.label)}</span>${o.hint ? `<span class="h">${esc(o.hint)}</span>` : ''}</span></label>`).join('');
   const oth = q.allowOther ? `<label class="opt ${multi ? 'multi' : ''} ${sel('__other') ? 'on' : ''}"><input type="${multi ? 'checkbox' : 'radio'}" name="${q.id}" value="__other" ${sel('__other') ? 'checked' : ''} onchange="pick('${q.id}', this.value, this.checked, ${multi})"><span class="mark"></span><span class="ol"><span class="l">غير ذلك</span><span class="h">اكتبه بكلماتك</span></span></label><div class="other ${sel('__other') ? 'show' : ''}"><input class="in" placeholder="اكتب هنا…" value="${esc(other)}" oninput="setOther('${q.id}', this.value)"></div>` : '';
   return `<div class="opts">${opts}${oth}</div>`;
 }
@@ -249,7 +252,11 @@ function renderText(q, v) {
   return `<input class="in ${q.type === 'number' ? 'num' : ''}" ${q.type === 'number' ? 'inputmode="decimal"' : ''} placeholder="${esc(q.placeholder || (q.type === 'number' ? '0' : 'اكتب هنا…'))}" value="${esc(v || '')}" oninput="setVal('${q.id}', this.value, true)">`;
 }
 function renderTable(q, v) {
-  const rows = Array.isArray(v) && v.length ? v : Array.from({ length: q.minRows || 1 }, () => ({}));
+  let rows = Array.isArray(v) && v.length ? v : Array.from({ length: q.minRows || 1 }, () => ({}));
+  if (q.rowsFrom && (!Array.isArray(v) || !v.some(r => Object.values(r).some(x => String(x ?? '').trim())))) {
+    const src = qById(q.rowsFrom.q); const chosen = selectedValues(q.rowsFrom.q).filter(x => !(q.rowsFrom.skip || []).includes(x));
+    if (src && chosen.length) rows = chosen.map(x => ({ [q.rowsFrom.column]: x === '__other' ? ((answers[q.rowsFrom.q] || {}).other || '') : (((src.options || []).find(o => o.value === x) || {}).label || x) }));
+  }
   if (!Array.isArray(v) || !v.length) answers[q.id] = rows;
   return `<div class="tbl">${rows.map((r, i) => `<div class="trow"><span class="rn">${i + 1}</span>${rows.length > (q.minRows || 1) ? `<button class="rm" title="احذف" onclick="rmRow('${q.id}',${i})">×</button>` : ''}<div class="cols">${q.columns.map(c => `<label>${esc(c.label)}${c.type === 'select' ? `<select class="in" onchange="setCell('${q.id}',${i},'${c.key}',this.value)"><option value="">—</option>${(c.options || []).map(o => `<option ${r[c.key] === o ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select>` : `<input class="in ${c.type === 'number' ? 'num' : ''}" ${c.type === 'number' ? 'inputmode="decimal"' : ''} placeholder="${esc(c.placeholder || '')}" value="${esc(r[c.key] || '')}" oninput="setCell('${q.id}',${i},'${c.key}',this.value)">`}</label>`).join('')}</div></div>`).join('')}<button class="add" onclick="addRow('${q.id}')">+ أضف سطراً</button></div>`;
 }
